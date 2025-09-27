@@ -1,9 +1,452 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>AIGame.Core</name>
+        <name>AIGame.Core.Library</name>
     </assembly>
     <members>
+        <member name="T:AIGame.Examples.GoalOriented.GoalOrientedFactory">
+            <summary>
+            Factory that spawns EasyAI agents.
+            Creates a full team of agents using the EasyAI behaviour.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.GoalOriented.GoalOrientedFactory.CreateAgents(UnityEngine.GameObject,System.Int32)">
+            <summary>
+            Creates a set of EasyAI agents for one team.
+            </summary>
+            <param name="agentPrefab">The prefab used for each agent.</param>
+            <param name="teamSize">The number of agents per team.</param>
+            <returns>An array containing the spawned EasyAI agents.</returns>
+        </member>
+        <member name="M:AIGame.Examples.GoalOriented.WorldState.SetState(System.String,System.Object)">
+            <summary>
+            Sets a state variable to the specified value.
+            </summary>
+            <param name="key">The state variable key.</param>
+            <param name="value">The value to set.</param>
+        </member>
+        <member name="M:AIGame.Examples.GoalOriented.WorldState.GetState``1(System.String)">
+            <summary>
+            Gets a state variable of the specified type.
+            </summary>
+            <typeparam name="T">The type to cast the value to.</typeparam>
+            <param name="key">The state variable key.</param>
+            <returns>The state value cast to type T, or default(T) if not found.</returns>
+        </member>
+        <member name="M:AIGame.Examples.GoalOriented.WorldState.HasState(System.String)">
+            <summary>
+            Checks if a state variable exists.
+            </summary>
+            <param name="key">The state variable key to check.</param>
+            <returns>True if the state variable exists, false otherwise.</returns>
+        </member>
+        <member name="M:AIGame.Examples.GoalOriented.WorldState.Clone">
+            <summary>
+            Creates a deep copy of this world state.
+            </summary>
+            <returns>A new WorldState with the same key-value pairs.</returns>
+        </member>
+        <member name="M:AIGame.Examples.GoalOriented.WorldState.Satisfies(AIGame.Examples.GoalOriented.WorldState)">
+            <summary>
+            Checks if this world state satisfies all conditions in the goal state.
+            </summary>
+            <param name="goal">The goal state to check against.</param>
+            <returns>True if all goal conditions are met, false otherwise.</returns>
+        </member>
+        <member name="M:AIGame.Examples.GoalOriented.WorldState.ToString">
+            <summary>
+            Returns a string representation of this world state.
+            </summary>
+            <returns>A formatted string showing all state variables and values.</returns>
+        </member>
+        <member name="T:AIGame.Examples.FSM.AIState">
+            <summary>
+            Base class for AI states in a simple finite state machine.
+            Supports optional nested substates that are entered/executed/exited together.
+            </summary>
+        </member>
+        <member name="F:AIGame.Examples.FSM.AIState.parent">
+            <summary>
+            The owning AI instance.
+            </summary>
+        </member>
+        <member name="P:AIGame.Examples.FSM.AIState.Name">
+            <summary>
+            Display name for debugging.
+            </summary>
+        </member>
+        <member name="F:AIGame.Examples.FSM.AIState.subStates">
+            <summary>
+            Optional nested substates that run with this state.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.AIState.#ctor(AIGame.Examples.FSM.FinitStateAI,System.String,AIGame.Examples.FSM.AIState[])">
+            <summary>
+            Creates a new state.
+            </summary>
+            <param name="parent">Owning AI.</param>
+            <param name="name">Debug name.</param>
+            <param name="substates">Optional substates.</param>
+        </member>
+        <member name="M:AIGame.Examples.FSM.AIState.Enter">
+            <summary>
+            Called when entering this state.
+            Invokes <see cref="M:AIGame.Examples.FSM.AIState.Enter"/> on all substates.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.AIState.Exit">
+            <summary>
+            Called when exiting this state.
+            Invokes <see cref="M:AIGame.Examples.FSM.AIState.Exit"/> on all substates.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.AIState.Execute">
+            <summary>
+            Called every update while this state is active.
+            Invokes <see cref="M:AIGame.Examples.FSM.AIState.Execute"/> on all substates.
+            </summary>
+        </member>
+        <member name="T:AIGame.Examples.FSM.Idle">
+            <summary>
+            A no-op idle state.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.Idle.#ctor(AIGame.Examples.FSM.FinitStateAI)">
+            <summary>
+            Creates an idle state.
+            </summary>
+            <param name="parent">Owning AI.</param>
+        </member>
+        <member name="T:AIGame.Examples.FSM.MoveToPosition">
+            <summary>
+            Base state for moving to a world position, raising an event on arrival.
+            </summary>
+        </member>
+        <member name="E:AIGame.Examples.FSM.MoveToPosition.DestinationReached">
+            <summary>
+            Raised exactly once when the destination is reached.
+            </summary>
+        </member>
+        <member name="F:AIGame.Examples.FSM.MoveToPosition.currentDestination">
+            <summary>Current target world position.</summary>
+        </member>
+        <member name="F:AIGame.Examples.FSM.MoveToPosition.hasReachedDestination">
+            <summary>True after arrival is detected.</summary>
+        </member>
+        <member name="F:AIGame.Examples.FSM.MoveToPosition.ARRIVAL_THRESHOLD">
+            <summary>Distance threshold to consider arrival.</summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.MoveToPosition.#ctor(AIGame.Examples.FSM.FinitStateAI,System.String,AIGame.Examples.FSM.AIState[])">
+            <summary>
+            Creates a move state.
+            </summary>
+            <param name="parent">Owning AI.</param>
+            <param name="name">Debug name.</param>
+            <param name="substates">Optional substates.</param>
+        </member>
+        <member name="M:AIGame.Examples.FSM.MoveToPosition.Enter">
+            <inheritdoc/>
+        </member>
+        <member name="M:AIGame.Examples.FSM.MoveToPosition.Execute">
+            <inheritdoc/>
+        </member>
+        <member name="T:AIGame.Examples.FSM.MoveToObjective">
+            <summary>
+            Moves near the current match objective.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.MoveToObjective.#ctor(AIGame.Examples.FSM.FinitStateAI,AIGame.Examples.FSM.AIState[])">
+            <summary>
+            Creates the state.
+            </summary>
+            <param name="parent">Owning AI.</param>
+            <param name="substates">Optional substates.</param>
+        </member>
+        <member name="M:AIGame.Examples.FSM.MoveToObjective.Enter">
+            <inheritdoc/>
+        </member>
+        <member name="T:AIGame.Examples.FSM.Combat">
+            <summary>
+            State for engaging visible enemies.
+            </summary>
+        </member>
+        <member name="E:AIGame.Examples.FSM.Combat.NoMoreEnemies">
+            <summary>
+            Raised when there are no visible enemies.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.Combat.#ctor(AIGame.Examples.FSM.FinitStateAI,AIGame.Examples.FSM.AIState[])">
+            <summary>
+            Creates the state.
+            </summary>
+            <param name="parent">Owning AI.</param>
+            <param name="substates">Optional substates.</param>
+        </member>
+        <member name="M:AIGame.Examples.FSM.Combat.Enter">
+            <inheritdoc/>
+        </member>
+        <member name="M:AIGame.Examples.FSM.Combat.Execute">
+            <inheritdoc/>
+        </member>
+        <member name="M:AIGame.Examples.FSM.Combat.Exit">
+            <inheritdoc/>
+        </member>
+        <member name="T:AIGame.Examples.FSM.ProtectObjective">
+            <summary>
+            Patrols around the objective by moving to random nearby offsets.
+            </summary>
+        </member>
+        <member name="F:AIGame.Examples.FSM.ProtectObjective.currentDestination">
+            <summary>Current patrol destination.</summary>
+        </member>
+        <member name="F:AIGame.Examples.FSM.ProtectObjective.ARRIVAL_THRESHOLD">
+            <summary>Arrival threshold for patrol hops.</summary>
+        </member>
+        <member name="F:AIGame.Examples.FSM.ProtectObjective.hasDestination">
+            <summary>Whether a destination has been set.</summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.ProtectObjective.#ctor(AIGame.Examples.FSM.FinitStateAI,AIGame.Examples.FSM.AIState[])">
+            <summary>
+            Creates the state.
+            </summary>
+            <param name="parent">Owning AI.</param>
+            <param name="substates">Optional substates.</param>
+        </member>
+        <member name="M:AIGame.Examples.FSM.ProtectObjective.Execute">
+            <inheritdoc/>
+        </member>
+        <member name="M:AIGame.Examples.FSM.ProtectObjective.Exit">
+            <inheritdoc/>
+        </member>
+        <member name="T:AIGame.Examples.FSM.Strafe">
+            <summary>
+            Strafes left/right around current position.
+            </summary>
+        </member>
+        <member name="F:AIGame.Examples.FSM.Strafe.movingRight">
+            <summary>Current strafe direction flag.</summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.Strafe.#ctor(AIGame.Examples.FSM.FinitStateAI)">
+            <summary>
+            Creates the state.
+            </summary>
+            <param name="parent">Owning AI.</param>
+        </member>
+        <member name="M:AIGame.Examples.FSM.Strafe.Execute">
+            <inheritdoc/>
+        </member>
+        <member name="T:AIGame.Examples.FSM.Dodge">
+            <summary>
+            Performs a dodge when a hostile ball is detected nearby.
+            </summary>
+        </member>
+        <member name="F:AIGame.Examples.FSM.Dodge.ball">
+            <summary>Last detected hostile ball.</summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.Dodge.#ctor(AIGame.Examples.FSM.FinitStateAI)">
+            <summary>
+            Creates the state.
+            </summary>
+            <param name="parent">Owning AI.</param>
+        </member>
+        <member name="M:AIGame.Examples.FSM.Dodge.Execute">
+            <inheritdoc/>
+        </member>
+        <member name="M:AIGame.Examples.FSM.Dodge.OnBallDetected(AIGame.Core.Ball)">
+            <summary>
+            AI hook for ball sightings.
+            </summary>
+            <param name="ball">Detected ball.</param>
+        </member>
+        <member name="T:AIGame.Examples.FSM.FollowEnemy">
+            <summary>
+            Follows a visible enemy and stops at preferred engagement range.
+            </summary>
+        </member>
+        <member name="F:AIGame.Examples.FSM.FollowEnemy.stopped">
+            <summary>Whether the agent has issued a stop after entering range.</summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FollowEnemy.#ctor(AIGame.Examples.FSM.FinitStateAI,AIGame.Examples.FSM.AIState[])">
+            <summary>
+            Creates the state.
+            </summary>
+            <param name="parent">Owning AI.</param>
+            <param name="substates">Optional substates.</param>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FollowEnemy.Enter">
+            <inheritdoc/>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FollowEnemy.Execute">
+            <inheritdoc/>
+        </member>
+        <member name="T:AIGame.Examples.FSM.MoveToPowerUp">
+            <summary>
+            State for seeking and collecting power-ups.
+            </summary>
+            
+        </member>
+        <member name="F:AIGame.Examples.FSM.FinitStateAI.idle">
+            <summary>
+            Cached reference to the idle state for quick resetting after death.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FinitStateAI.StartAI">
+            <inheritdoc/>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FinitStateAI.ConfigureStats">
+            <inheritdoc/>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FinitStateAI.Ondeath">
+            <summary>
+            Called when the AI dies. Resets to idle state.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FinitStateAI.OnObjectiveReached">
+            <summary>
+            Called when the objective is reached.
+            Switches to the protect-objective state.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FinitStateAI.OnEnemyEnterVision">
+            <summary>
+            Called when an enemy enters the AI's vision range.
+            Switches to combat state.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FinitStateAI.OnNomoreEnemies">
+            <summary>
+            Called when there are no more visible enemies.
+            Switches to move-to-objective state.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FinitStateAI.OnSpawned">
+            <summary>
+            Called when the AI respawns.
+            Switches to spawned state.
+            </summary>
+        </member>
+        <member name="T:AIGame.Examples.FSM.FinitStateFactory">
+            <summary>
+            Factory that spawns EasyAI agents.
+            Creates a full team of agents using the EasyAI behaviour.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FinitStateFactory.CreateAgents(UnityEngine.GameObject,System.Int32)">
+            <summary>
+            Creates a set of EasyAI agents for one team.
+            </summary>
+            <param name="agentPrefab">The prefab used for each agent.</param>
+            <param name="teamSize">The number of agents per team.</param>
+            <returns>An array containing the spawned EasyAI agents.</returns>
+        </member>
+        <member name="T:AIGame.Examples.FSM.AICondition">
+            <summary>
+            Represents the possible conditions that can trigger a state change.
+            </summary>
+        </member>
+        <member name="T:AIGame.Examples.FSM.FSM">
+            <summary>
+            Base class for example AI agents.
+            Provides a finite state machine implementation for switching between states
+            based on <see cref="T:AIGame.Examples.FSM.AICondition"/> values.
+            </summary>
+        </member>
+        <member name="F:AIGame.Examples.FSM.FSM.currentState">
+            <summary>
+            The current active state.
+            </summary>
+        </member>
+        <member name="F:AIGame.Examples.FSM.FSM.transitions">
+            <summary>
+            Maps a tuple of (current state, condition) to the next state.
+            </summary>
+        </member>
+        <member name="F:AIGame.Examples.FSM.FSM.currentCondition">
+            <summary>
+            The condition currently set, which may trigger a state change.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FSM.Execute">
+            <summary>
+            Main update logic for the AI.
+            Runs once per frame as part of <see cref="T:AIGame.Core.BaseAI"/> execution.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FSM.SetCondition(AIGame.Examples.FSM.AICondition)">
+            <summary>
+            Sets the current condition to be evaluated in the next update cycle.
+            </summary>
+            <param name="condition">The new condition value.</param>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FSM.AddTransition(AIGame.Examples.FSM.AIState,AIGame.Examples.FSM.AICondition,AIGame.Examples.FSM.AIState)">
+            <summary>
+            Adds a state transition rule.
+            </summary>
+            <param name="from">The starting state.</param>
+            <param name="condition">The condition that triggers the change.</param>
+            <param name="to">The target state.</param>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FSM.ProcessTransitions">
+            <summary>
+            Checks if the current state and condition match any registered transition rule.
+            Changes the state if a match is found.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.FSM.FSM.ChangeState(AIGame.Examples.FSM.AIState)">
+            <summary>
+            Changes the current state, calling <see cref="M:AIGame.Examples.FSM.AIState.Exit"/> on the old state
+            and <see cref="M:AIGame.Examples.FSM.AIState.Enter"/> on the new state.
+            </summary>
+            <param name="newState">The state to switch to.</param>
+        </member>
+        <member name="T:AIGame.Examples.BeheaviourTree.BehaviourTreeFactory">
+            <summary>
+            Factory that spawns EasyAI agents.
+            Creates a full team of agents using the EasyAI behaviour.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.BeheaviourTree.BehaviourTreeFactory.CreateAgents(UnityEngine.GameObject,System.Int32)">
+            <summary>
+            Creates a set of EasyAI agents for one team.
+            </summary>
+            <param name="agentPrefab">The prefab used for each agent.</param>
+            <param name="teamSize">The number of agents per team.</param>
+            <returns>An array containing the spawned EasyAI agents.</returns>
+        </member>
+        <member name="T:AIGame.Examples.ModelBased.ModelBasedFactory">
+            <summary>
+            Factory that spawns EasyAI agents.
+            Creates a full team of agents using the EasyAI behaviour.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.ModelBased.ModelBasedFactory.CreateAgents(UnityEngine.GameObject,System.Int32)">
+            <summary>
+            Creates a set of EasyAI agents for one team.
+            </summary>
+            <param name="agentPrefab">The prefab used for each agent.</param>
+            <param name="teamSize">The number of agents per team.</param>
+            <returns>An array containing the spawned EasyAI agents.</returns>
+        </member>
+        <member name="M:AIGame.Examples.ReactiveAI.ReactiveAI.PickRandomDestination">
+            <summary>
+            Picks a random destination that the AI can walk to using NavMesh.
+            </summary>
+            <returns>A random walkable position, or the current position if no valid destination found</returns>
+        </member>
+        <member name="T:AIGame.Examples.ReactiveAI.ReactiveFactory">
+            <summary>
+            Factory that spawns EasyAI agents.
+            Creates a full team of agents using the EasyAI behaviour.
+            </summary>
+        </member>
+        <member name="M:AIGame.Examples.ReactiveAI.ReactiveFactory.CreateAgents(UnityEngine.GameObject,System.Int32)">
+            <summary>
+            Creates a set of EasyAI agents for one team.
+            </summary>
+            <param name="agentPrefab">The prefab used for each agent.</param>
+            <param name="teamSize">The number of agents per team.</param>
+            <returns>An array containing the spawned EasyAI agents.</returns>
+        </member>
         <member name="T:AIGame.Core.Agent">
             <summary>
             Base class for all agents in the game (e.g., player, NPCs, AI opponents).
@@ -30,6 +473,23 @@
             Static counter used to assign unique IDs to agents.
             </summary>
         </member>
+        <member name="F:AIGame.Core.Agent.activeBuffs">
+            <summary>
+            List of currently active power-ups on this agent.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.Agent.SetSpeed(System.Single)">
+            <summary>
+            Sets the movement speed of this agent.
+            </summary>
+            <param name="speed">The new speed value to apply.</param>
+        </member>
+        <member name="M:AIGame.Core.Agent.GetSpeed">
+            <summary>
+            Gets the current movement speed of this agent.
+            </summary>
+            <returns>The current speed value.</returns>
+        </member>
         <member name="M:AIGame.Core.Agent.Awake">
             <summary>
             Unity callback invoked when the component is initialized.
@@ -43,10 +503,52 @@
             </summary>
             <param name="spawnPosition">The world-space position where the agent should reappear.</param>
         </member>
+        <member name="M:AIGame.Core.Agent.ApplyBuff(AIGame.Core.Buff)">
+            <summary>
+            Adds a power-up to this agent.
+            </summary>
+            <param name="powerUp">The power-up to add.</param>
+        </member>
+        <member name="M:AIGame.Core.Agent.RemoveBuff(AIGame.Core.Buff)">
+            <summary>
+            Removes a power-up from this agent.
+            </summary>
+            <param name="powerUp">The power-up to remove.</param>
+        </member>
+        <member name="M:AIGame.Core.Agent.GetActiveBuffs">
+            <summary>
+            Gets all currently active power-ups on this agent.
+            </summary>
+            <returns>Read-only list of active power-ups.</returns>
+        </member>
+        <member name="M:AIGame.Core.Agent.Update">
+            <summary>
+            Unity Update method that executes all active power-ups.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.Agent.TryConsumePowerup(System.Int32)">
+            <summary>
+            Attempts to consume a power-up with the specified ID.
+            </summary>
+            <param name="id">The ID of the power-up to consume.</param>
+            <returns>True if the power-up was successfully consumed; otherwise false.</returns>
+        </member>
+        <member name="M:AIGame.Core.Agent.ApplyVisualEffect(System.String)">
+            <summary>
+            Applies a visual effect to this agent by name.
+            </summary>
+            <param name="effect">The name of the effect to apply.</param>
+        </member>
+        <member name="M:AIGame.Core.Agent.RemoveVisualEffect(System.String)">
+            <summary>
+            Removes a visual effect from this agent by name.
+            </summary>
+            <param name="effect">The name of the effect to remove.</param>
+        </member>
         <member name="T:AIGame.Core.AgentFactory">
             <summary>
             Base factory for creating AI agent lineups from a prefab.
-            Subclasses implement <see cref="M:AIGame.Core.AgentFactory.CreateAgents(UnityEngine.GameObject)"/> to specify which agents to spawn.
+            Subclasses implement <see cref="!:CreateAgents(GameObject)"/> to specify which agents to spawn.
             </summary>
         </member>
         <member name="P:AIGame.Core.AgentFactory.FactoryName">
@@ -54,11 +556,12 @@
             Display name for this factory (used in menus/UI).
             </summary>
         </member>
-        <member name="M:AIGame.Core.AgentFactory.CreateAgents(UnityEngine.GameObject)">
+        <member name="M:AIGame.Core.AgentFactory.CreateAgents(UnityEngine.GameObject,System.Int32)">
             <summary>
             Create the raw agent selection for one team from the given prefab.
             </summary>
             <param name="agentPrefab">The agent prefab to instantiate or reference.</param>
+            <param name="teamSize">The number of agents per team.</param>
             <returns>
             An array of <see cref="T:AIGame.Core.BaseAI"/> entries (may contain nulls or be empty).
             The array length determines the requested team size before normalization.
@@ -71,7 +574,7 @@
             <param name="agentPrefab">The agent prefab supplied to the factory.</param>
             <returns>
             A non-null array whose length equals <c>AgentsPerTeam</c>.
-            Null entries from <see cref="M:AIGame.Core.AgentFactory.CreateAgents(UnityEngine.GameObject)"/> are replaced by the first non-null agent.
+            Null entries from <see cref="!:CreateAgents(GameObject)"/> are replaced by the first non-null agent.
             If too many agents are returned they are trimmed; if too few, the array is padded with duplicates.
             Returns <see cref="M:System.Array.Empty``1"/> when the prefab is null, the result is empty,
             or all entries are null.
@@ -106,6 +609,35 @@
             </summary>
             <param name="collision">Collision information provided by Unity.</param>
         </member>
+        <member name="T:AIGame.Core.PerceivedFlag">
+            <summary>
+            Immutable snapshot of an agent that can be safely cached and passed around.
+            Contains only value types (no references to scene objects).
+            </summary>
+        </member>
+        <member name="F:AIGame.Core.PerceivedFlag.Position">
+            <summary>
+            World position of the agent when the snapshot was taken.
+            </summary>
+        </member>
+        <member name="F:AIGame.Core.PerceivedFlag.Team">
+            <summary>
+            Unity frame index in which this snapshot was recorded.
+            </summary>
+        </member>
+        <member name="F:AIGame.Core.PerceivedFlag.Frame">
+            <summary>
+            Unity frame index in which this snapshot was recorded.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.PerceivedFlag.#ctor(UnityEngine.Vector3,AIGame.Core.Team,System.Int32)">
+            <summary>
+            Internal constructor for value snapshots.
+            </summary>
+            <param name="id">Unique ID of the perceived agent.</param>
+            <param name="pos">World-space position of the agent.</param>
+            <param name="frame">Unity frame number when the snapshot was taken.</param>
+        </member>
         <member name="T:AIGame.Core.PerceivedAgent">
             <summary>
             Immutable snapshot of an agent that can be safely cached and passed around.
@@ -128,6 +660,35 @@
             </summary>
         </member>
         <member name="M:AIGame.Core.PerceivedAgent.#ctor(System.Int32,UnityEngine.Vector3,System.Int32)">
+            <summary>
+            Internal constructor for value snapshots.
+            </summary>
+            <param name="id">Unique ID of the perceived agent.</param>
+            <param name="pos">World-space position of the agent.</param>
+            <param name="frame">Unity frame number when the snapshot was taken.</param>
+        </member>
+        <member name="T:AIGame.Core.PerceivedPowerUp">
+            <summary>
+            Immutable snapshot of a powerup that can be safely cached and passed around.
+            Contains only value types (no references to scene objects).
+            </summary>
+        </member>
+        <member name="F:AIGame.Core.PerceivedPowerUp.Id">
+            <summary>
+            Unique agent identifier.
+            </summary>
+        </member>
+        <member name="F:AIGame.Core.PerceivedPowerUp.Position">
+            <summary>
+            World position of the agent when the snapshot was taken.
+            </summary>
+        </member>
+        <member name="F:AIGame.Core.PerceivedPowerUp.Frame">
+            <summary>
+            Unity frame index in which this snapshot was recorded.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.PerceivedPowerUp.#ctor(System.Int32,UnityEngine.Vector3,System.Int32)">
             <summary>
             Internal constructor for value snapshots.
             </summary>
@@ -204,6 +765,9 @@
         <member name="E:AIGame.Core.BaseAI.EnemyExitVision">
             <summary>Raised when an enemy exits vision.</summary>
         </member>
+        <member name="E:AIGame.Core.BaseAI.PowerUpExitVision">
+            <summary>Raised when a power-up exits vision.</summary>
+        </member>
         <member name="E:AIGame.Core.BaseAI.VisibleFriendlyDeath">
             <summary>Raised when a visible friendly dies.</summary>
         </member>
@@ -222,14 +786,43 @@
             </summary>
             <param name="ball">The detected ball instance.</param>
         </member>
+        <member name="E:AIGame.Core.BaseAI.FlagEnter">
+            <summary>Raised when a flag enters vision.</summary>
+        </member>
+        <member name="M:AIGame.Core.BaseAI.OnFlagEnterVision(AIGame.Core.Team)">
+            <summary>
+            Invokes the <see cref="E:AIGame.Core.BaseAI.BallDetected"/> event.
+            </summary>
+            <param name="ball">The detected ball instance.</param>
+        </member>
+        <member name="E:AIGame.Core.BaseAI.FlagExit">
+            <summary>Raised when a flag exits vision.</summary>
+        </member>
+        <member name="M:AIGame.Core.BaseAI.OnFlagExitVision(AIGame.Core.Team)">
+            <summary>
+            Invokes the <see cref="E:AIGame.Core.BaseAI.BallDetected"/> event.
+            </summary>
+            <param name="ball">The detected ball instance.</param>
+        </member>
         <member name="E:AIGame.Core.BaseAI.Respawned">
             <summary>Raised when the agent respawns.</summary>
+        </member>
+        <member name="E:AIGame.Core.BaseAI.StartSpectate">
+            <summary>Raised when spectating starts for this agent.</summary>
+        </member>
+        <member name="E:AIGame.Core.BaseAI.EndSpectate">
+            <summary>Raised when spectating ends for this agent.</summary>
         </member>
         <member name="E:AIGame.Core.BaseAI.Death">
             <summary>Raised when the agent dies.</summary>
         </member>
         <member name="E:AIGame.Core.BaseAI.DodgeComplete">
             <summary>Raised when a dodge finishes.</summary>
+        </member>
+        <member name="P:AIGame.Core.BaseAI.MyName">
+            <summary>
+            Display name for this AI agent (max 20 characters).
+            </summary>
         </member>
         <member name="P:AIGame.Core.BaseAI.MyFlagCarrier">
             <summary>
@@ -277,6 +870,12 @@
             Runs a single decision step: validates state, refreshes target if necessary,
             then calls <see cref="M:AIGame.Core.BaseAI.ExecuteAI"/>.
             </summary>
+        </member>
+        <member name="M:AIGame.Core.BaseAI.SetName">
+            <summary>
+            Randomly selects and removes a name from the static names list.
+            </summary>
+            <returns>A random name from the available pool.</returns>
         </member>
         <member name="M:AIGame.Core.BaseAI.AllocateStat(AIGame.Core.BaseAI.StatType,System.Single)">
             <summary>
@@ -340,6 +939,20 @@
             </summary>
             <returns>Array copy of current visible allies.</returns>
         </member>
+        <member name="M:AIGame.Core.BaseAI.GetVisiblePowerUpsSnapshot">
+            <summary>
+            Returns a fresh array of visible power-ups for the current frame.
+            The returned list contains only value snapshots, not live references.
+            </summary>
+            <returns>Array copy of current visible power-ups.</returns>
+        </member>
+        <member name="M:AIGame.Core.BaseAI.GetVisibleFlagsSnapShot">
+            <summary>
+            Returns a fresh array of visible flags for the current frame.
+            The returned list contains only value snapshots, not live references.
+            </summary>
+            <returns>Array copy of current visible flags.</returns>
+        </member>
         <member name="M:AIGame.Core.BaseAI.TryGetTarget(AIGame.Core.PerceivedAgent@)">
             <summary>
             Tries to get the current target snapshot.
@@ -391,16 +1004,18 @@
             </summary>
             <param name="targetWorldPos">World-space position to throw at.</param>
         </member>
+        <member name="M:AIGame.Core.BaseAI.TryThrowAtTargetId(System.Int32)">
+            <summary>
+            Attempts to start a throw sequence toward a target agent by ID.
+            Gets fresh target position right before throwing for better accuracy.
+            </summary>
+            <param name="targetId">ID of the target agent.</param>
+        </member>
         <member name="M:AIGame.Core.BaseAI.TryThrow">
             <summary>
             Checks whether a throw can start (not already throwing or reloading).
             </summary>
             <returns>True if a throw can begin; otherwise false.</returns>
-        </member>
-        <member name="M:AIGame.Core.BaseAI.Reload">
-            <summary>
-            Begins reloading if not already reloading.
-            </summary>
         </member>
         <member name="M:AIGame.Core.BaseAI.ReloadRoutine">
             <summary>
@@ -415,11 +1030,26 @@
             <param name="target">World-space target position at wind-up time.</param>
             <returns>Coroutine enumerator.</returns>
         </member>
+        <member name="M:AIGame.Core.BaseAI.WindupRoutineForTarget(System.Int32)">
+            <summary>
+            Handles wind-up animation before throwing at a target by ID.
+            Gets fresh target position right before throwing.
+            </summary>
+            <param name="targetId">ID of the target agent.</param>
+            <returns>Coroutine enumerator.</returns>
+        </member>
         <member name="M:AIGame.Core.BaseAI.ThrowRoutine(UnityEngine.Vector3)">
             <summary>
             Plays the throw animation and waits for it to complete.
             </summary>
             <param name="target">World-space target position for the throw.</param>
+            <returns>Coroutine enumerator.</returns>
+        </member>
+        <member name="M:AIGame.Core.BaseAI.ThrowRoutineForTarget(System.Int32)">
+            <summary>
+            Plays the throw animation and gets fresh target position before throwing.
+            </summary>
+            <param name="targetId">ID of the target agent.</param>
             <returns>Coroutine enumerator.</returns>
         </member>
         <member name="M:AIGame.Core.BaseAI.OnThrowAnimationComplete">
@@ -565,6 +1195,64 @@
             Rotates the object to face the target camera.
             </summary>
         </member>
+        <member name="T:AIGame.Core.Buff">
+            <summary>
+            Abstract base class for all buffs that can be applied to agents.
+            Buffs provide temporary effects with a specified lifetime and automatic cleanup.
+            </summary>
+        </member>
+        <member name="P:AIGame.Core.Buff.lifeTime">
+            <summary>
+            The total duration this buff will remain active when applied.
+            </summary>
+        </member>
+        <member name="P:AIGame.Core.Buff.BuffName">
+            <summary>
+            The display name of this buff.
+            </summary>
+        </member>
+        <member name="P:AIGame.Core.Buff.timeRemaining">
+            <summary>
+            The remaining time before this buff expires and is removed.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.Buff.Apply(AIGame.Core.Agent)">
+            <summary>
+            Called when the buff is applied to an agent
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.Buff.OnApply(AIGame.Core.Agent)">
+            <summary>
+            Override this to define what happens when the buff is applied
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.Buff.OnExecute">
+            <summary>
+            Override this to define ongoing buff effects (called every frame)
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.Buff.OnRemove">
+            <summary>
+            Override this to define what happens when the buff is removed
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.Buff.Execute">
+            <summary>
+            Executes the buff effect and handles lifetime countdown.
+            Called every frame while the buff is active.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.Buff.Remove">
+            <summary>
+            Removes the buff from the agent and triggers cleanup effects.
+            Sets the buff as inactive and calls OnRemove().
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.Buff.GetTimeRemaining">
+            <summary>
+            Get remaining time on this buff
+            </summary>
+        </member>
         <member name="T:AIGame.Core.CaptureTheFlag">
             <summary>
             CTF game flow: spawns flags, tracks zones, and raises flag events.
@@ -578,23 +1266,14 @@
         <member name="F:AIGame.Core.CaptureTheFlag.blueFlag">
             <summary>Blue flag.</summary>
         </member>
-        <member name="F:AIGame.Core.CaptureTheFlag.redFlagZones">
+        <member name="P:AIGame.Core.CaptureTheFlag.RedFlagZones">
             <summary>Red spawn zones.</summary>
         </member>
-        <member name="F:AIGame.Core.CaptureTheFlag.blueFlagZones">
-            <summary>Blue spawn zones.</summary>
-        </member>
-        <member name="P:AIGame.Core.CaptureTheFlag.RedFlagZone">
+        <member name="F:AIGame.Core.CaptureTheFlag.redFlagZone">
             <summary>Current red flag zone.</summary>
         </member>
-        <member name="P:AIGame.Core.CaptureTheFlag.BlueFlagZone">
+        <member name="F:AIGame.Core.CaptureTheFlag.blueFlagZone">
             <summary>Current blue flag zone.</summary>
-        </member>
-        <member name="P:AIGame.Core.CaptureTheFlag.RedFlag">
-            <summary>Red flag ref (get/set).</summary>
-        </member>
-        <member name="P:AIGame.Core.CaptureTheFlag.BlueFlag">
-            <summary>Blue flag ref (get/set).</summary>
         </member>
         <member name="E:AIGame.Core.CaptureTheFlag.FlagPickedUp">
             <summary>Raised when a flag is picked up.</summary>
@@ -657,6 +1336,16 @@
             Should be called when a team's flag is returned to base.
             </summary>
             <param name="teamID">Returning team.</param>
+        </member>
+        <member name="M:AIGame.Core.CaptureTheFlag.GetDiscoverableEnemyFlagPosition(AIGame.Core.BaseAI)">
+            <summary>
+            Gets enemy flag position if it's discoverable (not OnBase)
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.CaptureTheFlag.GetOwnFlagPosition(AIGame.Core.BaseAI)">
+            <summary>
+            Gets own flag position - only works if the requesting agent is on the same team as the flag
+            </summary>
         </member>
         <member name="T:AIGame.Core.CPState">
             <summary>
@@ -828,7 +1517,7 @@
             Hides the control point message and timer UI elements.
             </summary>
         </member>
-        <member name="M:AIGame.Core.ControlPoint.NotifyAgentDeath(AIGame.Core.Detectable)">
+        <member name="M:AIGame.Core.ControlPoint.AIGame#Core#ICaptureable#NotifyAgentDeath(AIGame.Core.Detectable)">
             <summary>
             Removes the specified agent from active contesting teams due to death.
             </summary>
@@ -1017,6 +1706,11 @@
         <member name="M:AIGame.Core.GameOverState.Enable">
             <inheritdoc/>
         </member>
+        <member name="T:AIGame.Core.CP_References">
+            <summary>
+            Serializable container for all UI and visual references used by the ControlPoint system.
+            </summary>
+        </member>
         <member name="T:AIGame.Core.Team">
             <summary>
             Represents team alignment options for agents or objects.
@@ -1120,253 +1814,235 @@
         </member>
         <member name="T:AIGame.Core.Flag">
             <summary>
-            Represents a flag in Capture the Flag mode and manages its state, transitions, and interactions with players.
+            Represents a flag in the Capture the Flag game mode.
+            Handles flag states, capture mechanics, and team interactions.
             </summary>
         </member>
         <member name="T:AIGame.Core.Flag.FlagCondition">
             <summary>
-            Possible conditions that can trigger state transitions for the flag.
+            Defines the different conditions that can trigger flag state transitions.
             </summary>
         </member>
         <member name="T:AIGame.Core.Flag.FlagStatus">
             <summary>
-            High-level status of the flag's current placement or possession.
+            Represents the current status of the flag.
             </summary>
         </member>
-        <member name="F:AIGame.Core.Flag.currentState">
-            <summary>
-            The current active state in the flag's state machine.
-            </summary>
+        <member name="F:AIGame.Core.Flag.FlagStatus.OnBase">
+            <summary>Flag is at its spawn location.</summary>
+        </member>
+        <member name="F:AIGame.Core.Flag.FlagStatus.Pickedup">
+            <summary>Flag is being carried by an agent.</summary>
+        </member>
+        <member name="F:AIGame.Core.Flag.FlagStatus.Dropped">
+            <summary>Flag has been dropped and is on the ground.</summary>
         </member>
         <member name="P:AIGame.Core.Flag.FlagCarrier">
             <summary>
-            The current flag carrier holding this flag.
-            </summary>
-        </member>
-        <member name="F:AIGame.Core.Flag.transitions">
-            <summary>
-            State machine transitions keyed by current state and condition.
-            </summary>
-        </member>
-        <member name="F:AIGame.Core.Flag.currentCondition">
-            <summary>
-            The current condition that may trigger a state change.
+            The agent currently carrying this flag, if any.
             </summary>
         </member>
         <member name="P:AIGame.Core.Flag.CurrentStatus">
             <summary>
-            Current flag status (OnBase, Pickedup, Dropped).
+            The current status of this flag.
             </summary>
         </member>
         <member name="P:AIGame.Core.Flag.TeamID">
             <summary>
-            Team that owns this flag.
+            The team this flag belongs to.
             </summary>
         </member>
         <member name="P:AIGame.Core.Flag.img_progress">
             <summary>
-            UI element representing capture progress.
+            UI element showing capture progress.
             </summary>
         </member>
         <member name="P:AIGame.Core.Flag.img_progress_background">
             <summary>
-            UI background image for the progress indicator.
+            Background UI element for the progress bar.
             </summary>
         </member>
         <member name="P:AIGame.Core.Flag.PickedUp">
             <summary>
-            Indicates whether the flag has been picked up.
-            </summary>
-        </member>
-        <member name="F:AIGame.Core.Flag.redAgents">
-            <summary>
-            Set of red team agents within capture range.
-            </summary>
-        </member>
-        <member name="F:AIGame.Core.Flag.blueAgents">
-            <summary>
-            Set of blue team agents within capture range.
+            Whether this flag is currently picked up by an agent.
             </summary>
         </member>
         <member name="P:AIGame.Core.Flag.PossibleCarriers">
             <summary>
-            Set of possible flag carriers currently in range.
+            Set of agents that can potentially carry this flag.
             </summary>
         </member>
         <member name="P:AIGame.Core.Flag.StartPos">
             <summary>
-            The starting position of the flag in the scene.
+            The original spawn position of this flag.
             </summary>
         </member>
         <member name="P:AIGame.Core.Flag.CaptureTime">
             <summary>
-            Time required to capture the flag.
+            Time in seconds required to capture this flag.
             </summary>
         </member>
         <member name="P:AIGame.Core.Flag.LastOwner">
             <summary>
-            The last team that owned the flag.
+            The team that last initiated a capture attempt on this flag.
             </summary>
         </member>
         <member name="P:AIGame.Core.Flag.Colliders">
             <summary>
-            Array of colliders belonging to this flag.
+            Array of colliders associated with this flag.
             </summary>
         </member>
         <member name="P:AIGame.Core.Flag.MyRigidbody">
             <summary>
-            Rigidbody attached to this flag object.
+            The rigidbody component attached to this flag.
             </summary>
         </member>
         <member name="P:AIGame.Core.Flag.CurrentTeam">
             <summary>
-            Gets the team currently contesting or capturing the flag.
-            </summary>
-        </member>
-        <member name="M:AIGame.Core.Flag.Awake">
-            <summary>
-            Initializes state machine and starting values.
-            </summary>
-        </member>
-        <member name="M:AIGame.Core.Flag.Update">
-            <summary>
-            Updates the state machine every frame.
+            The team currently contesting this flag based on nearby agents.
             </summary>
         </member>
         <member name="M:AIGame.Core.Flag.PickUp(AIGame.Core.FlagCarrier)">
             <summary>
-            Called when the flag is picked up by a carrier.
+            Handles the flag being picked up by a carrier.
             </summary>
+            <param name="flagCarrier">The agent picking up the flag.</param>
         </member>
         <member name="M:AIGame.Core.Flag.ShowProgress">
             <summary>
-            Displays the progress UI elements.
+            Shows the capture progress UI elements.
             </summary>
         </member>
         <member name="M:AIGame.Core.Flag.HideProgress">
             <summary>
-            Hides the progress UI elements.
+            Hides the capture progress UI elements.
             </summary>
         </member>
         <member name="M:AIGame.Core.Flag.Drop">
             <summary>
-            Drops the flag at its current location.
-            </summary>
-        </member>
-        <member name="M:AIGame.Core.Flag.ResetFlag">
-            <summary>
-            Resets the flag to its base position and default state.
+            Handles the flag being dropped by its carrier.
             </summary>
         </member>
         <member name="M:AIGame.Core.Flag.PlaceInZone(UnityEngine.Vector3)">
             <summary>
-            Places the flag at a specific zone position.
+            Places the flag at a specific position within a flag zone.
             </summary>
+            <param name="postion">The position to place the flag at.</param>
         </member>
         <member name="M:AIGame.Core.Flag.Captured">
             <summary>
-            Marks the flag as captured and triggers events.
+            Handles the flag being captured by the enemy team.
             </summary>
         </member>
         <member name="M:AIGame.Core.Flag.Returned">
             <summary>
-            Marks the flag as returned and triggers events.
-            </summary>
-        </member>
-        <member name="M:AIGame.Core.Flag.Execute">
-            <summary>
-            Executes the current state and processes transitions.
-            </summary>
-        </member>
-        <member name="M:AIGame.Core.Flag.ProcessTransitions">
-            <summary>
-            Checks if any state transition should occur based on the current condition.
-            </summary>
-        </member>
-        <member name="M:AIGame.Core.Flag.ChangeState(AIGame.Core.FlagState)">
-            <summary>
-            Changes the current state to a new one.
-            </summary>
-        </member>
-        <member name="M:AIGame.Core.Flag.AddTransition(AIGame.Core.FlagState,AIGame.Core.Flag.FlagCondition,AIGame.Core.FlagState)">
-            <summary>
-            Adds a state transition to the dictionary.
+            Handles the flag being returned to its base by its own team.
             </summary>
         </member>
         <member name="M:AIGame.Core.Flag.SetCondition(AIGame.Core.Flag.FlagCondition)">
             <summary>
-            Sets the current condition to trigger a state change.
+            Sets the current condition to trigger state transitions.
             </summary>
+            <param name="condition">The condition to set.</param>
         </member>
-        <member name="M:AIGame.Core.Flag.OnTriggerEnter(UnityEngine.Collider)">
+        <member name="M:AIGame.Core.Flag.AIGame#Core#ICaptureable#NotifyAgentDeath(AIGame.Core.Detectable)">
             <summary>
-            Called when another collider enters the flag's trigger zone.
+            Notifies the flag that an agent has died and should be removed from tracking.
             </summary>
-        </member>
-        <member name="M:AIGame.Core.Flag.OnTriggerExit(UnityEngine.Collider)">
-            <summary>
-            Called when another collider exits the flag's trigger zone.
-            </summary>
-        </member>
-        <member name="M:AIGame.Core.Flag.NotifyAgentDeath(AIGame.Core.Detectable)">
-            <summary>
-            Removes a detectable from lists when that agent dies.
-            </summary>
+            <param name="detectable">The agent that died.</param>
         </member>
         <member name="T:AIGame.Core.FlagState">
             <summary>
-            Base class for all flag states in the state machine.
-            </summary>
-        </member>
-        <member name="F:AIGame.Core.FlagState.parent">
-            <summary>
-            Reference to the parent flag.
-            </summary>
-        </member>
-        <member name="F:AIGame.Core.FlagState.name">
-            <summary>
-            Name of this state.
-            </summary>
-        </member>
-        <member name="M:AIGame.Core.FlagState.#ctor(AIGame.Core.Flag,System.String)">
-            <summary>
-            Creates a new flag state.
+            Abstract base class for flag state machine states.
             </summary>
         </member>
         <member name="T:AIGame.Core.Uncontested">
             <summary>
-            State when the flag is uncontested and idle at its current location.
+            State where the flag is at its base with no contesting teams.
             </summary>
+        </member>
+        <member name="M:AIGame.Core.Uncontested.#ctor(AIGame.Core.Flag)">
+            <summary>
+            Creates a new uncontested state.
+            </summary>
+            <param name="parent">The flag this state belongs to.</param>
         </member>
         <member name="T:AIGame.Core.Dropped">
             <summary>
-            State when the flag has been dropped and is available to be picked up.
+            State where the flag has been dropped and is lying on the ground.
             </summary>
+        </member>
+        <member name="M:AIGame.Core.Dropped.#ctor(AIGame.Core.Flag)">
+            <summary>
+            Creates a new dropped state.
+            </summary>
+            <param name="parent">The flag this state belongs to.</param>
+        </member>
+        <member name="T:AIGame.Core.Contested">
+            <summary>
+            State where multiple teams are contesting the flag simultaneously.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.Contested.#ctor(AIGame.Core.Flag)">
+            <summary>
+            Creates a new contested state.
+            </summary>
+            <param name="parent">The flag this state belongs to.</param>
         </member>
         <member name="T:AIGame.Core.Depleting">
             <summary>
-            State when the flag is being depleted from capture progress.
+            State where the flag's capture progress is being reduced back to zero.
             </summary>
+        </member>
+        <member name="M:AIGame.Core.Depleting.#ctor(AIGame.Core.Flag)">
+            <summary>
+            Creates a new depleting state.
+            </summary>
+            <param name="parent">The flag this state belongs to.</param>
         </member>
         <member name="T:AIGame.Core.Acquiring">
             <summary>
-            State when a team is actively acquiring the flag.
+            State where a team is actively capturing the flag by filling the progress bar.
             </summary>
+        </member>
+        <member name="M:AIGame.Core.Acquiring.#ctor(AIGame.Core.Flag)">
+            <summary>
+            Creates a new acquiring state.
+            </summary>
+            <param name="parent">The flag this state belongs to.</param>
         </member>
         <member name="T:AIGame.Core.Carried">
             <summary>
-            State when the flag is carried by a player.
+            State where the flag is being carried by an agent.
             </summary>
+        </member>
+        <member name="M:AIGame.Core.Carried.#ctor(AIGame.Core.Flag)">
+            <summary>
+            Creates a new carried state.
+            </summary>
+            <param name="parent">The flag this state belongs to.</param>
         </member>
         <member name="T:AIGame.Core.Capture">
             <summary>
-            State when the flag has been successfully captured.
+            State representing the flag being captured by the enemy team.
             </summary>
+        </member>
+        <member name="M:AIGame.Core.Capture.#ctor(AIGame.Core.Flag)">
+            <summary>
+            Creates a new capture state.
+            </summary>
+            <param name="parent">The flag this state belongs to.</param>
         </member>
         <member name="T:AIGame.Core.Return">
             <summary>
-            State when the flag has been returned to its base.
+            State representing the flag being returned to its base by its own team.
             </summary>
+        </member>
+        <member name="M:AIGame.Core.Return.#ctor(AIGame.Core.Flag)">
+            <summary>
+            Creates a new return state.
+            </summary>
+            <param name="parent">The flag this state belongs to.</param>
         </member>
         <member name="T:AIGame.Core.FlagCarrier">
             <summary>
@@ -1396,6 +2072,16 @@
         <member name="P:AIGame.Core.FlagCarrier.HasFlag">
             <summary>
             Whether this carrier currently has a flag.
+            </summary>
+        </member>
+        <member name="E:AIGame.Core.FlagCarrier.Pickup">
+            <summary>
+            Event triggered when this carrier picks up a flag.
+            </summary>
+        </member>
+        <member name="E:AIGame.Core.FlagCarrier.Drop">
+            <summary>
+            Event triggered when this carrier drops a flag.
             </summary>
         </member>
         <member name="M:AIGame.Core.FlagCarrier.Awake">
@@ -1483,115 +2169,151 @@
             </summary>
             <param name="other">The collider to check for flag capture eligibility.</param>
         </member>
+        <member name="T:AIGame.Core.FlameBilboard">
+            <summary>
+            A billboard component that orients an object to face the camera while keeping the Y-axis locked.
+            Useful for flame effects and other elements that should face the camera but remain upright.
+            </summary>
+        </member>
+        <member name="F:AIGame.Core.FlameBilboard.target">
+            <summary>
+            The camera this object will face.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.FlameBilboard.Awake">
+            <summary>
+            Unity Awake method. Initializes the target camera to the main camera.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.FlameBilboard.LateUpdate">
+            <summary>
+            Unity LateUpdate method. Updates the object's rotation to face the camera while locking the Y-axis.
+            </summary>
+        </member>
         <member name="T:AIGame.Core.FoilageManager">
             <summary>
-            Handles procedural instancing and placement of grass and flower meshes on a ground surface,
-            using HSV-based color filtering from the ground texture to determine valid spawn locations.
+            Spawns grass and flower instances across a ground mesh by sampling its texture
+            (HSV filter) and draws them efficiently with GPU instancing.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.grassMesh">
             <summary>
-            The mesh used for grass instances.
+            Mesh used for each grass instance.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.grassMaterial">
             <summary>
-            The material used for grass instances.
+            Material used to render grass (instancing enabled at runtime).
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.grassCount">
             <summary>
-            Total number of grass blades to attempt to spawn.
+            Total grass instances to attempt to spawn.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.flowerMesh">
             <summary>
-            The mesh used for flower instances.
+            Mesh used for each flower instance.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.flowerMaterial">
             <summary>
-            The material used for flower instances.
+            Material used to render flowers (instancing enabled at runtime).
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.flowerCount">
             <summary>
-            Total number of flowers to attempt to spawn.
+            Total flower instances to attempt to spawn.
+            </summary>
+        </member>
+        <member name="F:AIGame.Core.FoilageManager.mushroomPrefab">
+            <summary>
+            Prefab used for each mushroom instance.
+            </summary>
+        </member>
+        <member name="F:AIGame.Core.FoilageManager.mushroomCount">
+            <summary>
+            Total mushroom instances to attempt to spawn.
+            </summary>
+        </member>
+        <member name="F:AIGame.Core.FoilageManager.mushroomScale">
+            <summary>
+            Fixed scale for all mushrooms.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.ground">
             <summary>
-            The ground GameObject (must have MeshRenderer and MeshCollider) used as placement reference.
+            The ground GameObject (must have MeshRenderer + MeshCollider).
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.spawnColor">
             <summary>
-            The target hue color for valid spawn areas.
+            Target hue to match when sampling the ground texture.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.hueTolerance">
             <summary>
-            Allowed deviation from the target hue.
+            Allowed hue difference (0..0.5 where 0.5 wraps across the wheel).
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.minSaturation">
             <summary>
-            Minimum saturation threshold for valid spawn pixels.
+            Minimum saturation threshold required for a pixel to be valid.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.minValue">
             <summary>
-            Minimum value (brightness) threshold for valid spawn pixels.
+            Minimum value (brightness) threshold required for a pixel to be valid.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.maxTiltAngle">
             <summary>
-            Maximum tilt angle applied to each instance for variation.
+            Maximum random tilt angle (degrees) applied on X and Z axes.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.widthRange">
             <summary>
-            Range of random width scaling for instances.
+            Random width range for per-instance scale.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.heightRange">
             <summary>
-            Range of random height scaling for instances.
+            Random height range for per-instance scale.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.depthRange">
             <summary>
-            Range of random depth scaling for instances.
+            Random depth range for per-instance scale.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.rayHeight">
             <summary>
-            Height above the ground from which placement raycasts originate.
+            Height above the ground bounds from which to cast down.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.rayDepth">
             <summary>
-            Maximum raycast depth when detecting the ground.
+            Maximum depth for the downward raycast.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.maxAttemptsMul">
             <summary>
-            Number of random placement attempts per desired instance.
+            Maximum random tries per instance before giving up.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.groundTexture">
             <summary>
-            The ground's main texture used for color sampling.
+            The readable ground albedo texture used to sample color.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.grassMatrices">
             <summary>
-            Transform matrices for all spawned grass instances.
+            Per-instance transform matrices for grass.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.flowerMatrices">
             <summary>
-            Transform matrices for all spawned flower instances.
+            Per-instance transform matrices for flowers.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.grassSpawned">
@@ -1604,58 +2326,105 @@
             Number of successfully spawned flower instances.
             </summary>
         </member>
+        <member name="F:AIGame.Core.FoilageManager.mushroomSpawned">
+            <summary>
+            Number of successfully spawned mushroom instances.
+            </summary>
+        </member>
         <member name="F:AIGame.Core.FoilageManager.groundBounds">
             <summary>
-            The world-space bounds of the ground mesh.
+            World-space bounds of the ground renderer.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.groundMask">
             <summary>
-            Layer mask for detecting the ground.
+            Layer mask used when raycasting against the ground.
             </summary>
         </member>
         <member name="F:AIGame.Core.FoilageManager.targetH">
             <summary>
-            Precomputed hue value from <see cref="F:AIGame.Core.FoilageManager.spawnColor"/> for filtering.
+            Precomputed hue component of <see cref="F:AIGame.Core.FoilageManager.spawnColor"/>.
             </summary>
         </member>
         <member name="M:AIGame.Core.FoilageManager.Start">
             <summary>
-            Unity Start method.
-            Initializes materials, validates the ground object, loads the texture,
-            and procedurally spawns grass and flower instances using HSV filtering.
+            Initializes references, validates requirements, samples the ground to place instances,
+            and prepares per-instance matrices. Also enables instancing on materials.
             </summary>
         </member>
         <member name="M:AIGame.Core.FoilageManager.Update">
             <summary>
-            Unity Update method.
-            Draws the grass and flower instances each frame using GPU instancing.
+            Draws the spawned grass and flower instances each frame using GPU instancing.
             </summary>
         </member>
         <member name="M:AIGame.Core.FoilageManager.TrySamplePoint(UnityEngine.Vector3@)">
             <summary>
-            Attempts to sample a random point on the ground that matches the HSV color filter.
+            Attempts to find a valid world position on the ground by random sampling
+            and filtering the underlying ground texture using HSV thresholds.
             </summary>
-            <param name="hitPoint">The resulting world-space hit position if successful.</param>
-            <returns>True if a valid point was found, false otherwise.</returns>
+            <param name="hitPoint">World position where the instance can be placed.</param>
+            <returns>True if a valid point was found; otherwise false.</returns>
         </member>
         <member name="M:AIGame.Core.FoilageManager.CreateMatrix(UnityEngine.Vector3)">
             <summary>
-            Creates a transformation matrix for an instance at the given position,
-            applying random rotation, tilt, and scaling.
+            Builds a per-instance transform matrix (TRS) with random rotation and scale
+            around the provided world position.
             </summary>
-            <param name="position">The world-space position of the instance.</param>
-            <returns>A TRS transformation matrix.</returns>
+            <param name="position">World-space position where the instance will be placed.</param>
+            <returns>A transform matrix for instanced rendering.</returns>
+        </member>
+        <member name="M:AIGame.Core.FoilageManager.CreateScale">
+            <summary>
+            Creates a random scale vector for mushroom GameObjects.
+            </summary>
+            <returns>A random scale vector.</returns>
+        </member>
+        <member name="T:AIGame.Core.FollowCamera">
+            <summary>
+            A camera controller that follows and orbits around a target transform.
+            Supports mouse-controlled camera rotation with configurable pitch and yaw limits.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.FollowCamera.Start">
+            <summary>
+            Unity Start method. Initializes camera rotation values and validates the target.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.FollowCamera.LateUpdate">
+            <summary>
+            Unity LateUpdate method. Updates camera position and rotation to follow the target with orbital controls.
+            </summary>
+        </member>
+        <member name="T:AIGame.Core.FreeFlyCamera">
+            <summary>
+            A free-flying camera controller that allows movement in all directions using keyboard and mouse input.
+            Supports variable movement speeds and smooth mouse look functionality.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.FreeFlyCamera.Start">
+            <summary>
+            Unity Start method. Initializes cursor settings and rotation values.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.FreeFlyCamera.Update">
+            <summary>
+            Unity Update method. Handles movement and mouse look input each frame.
+            </summary>
         </member>
         <member name="M:AIGame.Core.FreeFlyCamera.HandleMovement">
             <summary>
             Handles movement
             </summary>
         </member>
+        <member name="M:AIGame.Core.FreeFlyCamera.HandleMouseLook">
+            <summary>
+            Handles mouse look input to rotate the camera.
+            </summary>
+        </member>
         <member name="T:AIGame.Core.GameManager">
             <summary>
-            Central coordinator for match flow: spawning, UI, factories, cameras, and global vision checks.
-            Implements a scene‑singleton via <see cref="P:AIGame.Core.GameManager.Instance"/>.
+            Central coordinator for match flow: spawning, factories, cameras, and global vision checks.
+            UI functionality is handled by UIManager. Implements a scene‑singleton via <see cref="P:AIGame.Core.GameManager.Instance"/>.
             </summary>
         </member>
         <member name="P:AIGame.Core.GameManager.Instance">
@@ -1668,12 +2437,6 @@
             Optional gameplay objective object referenced by systems/UI.
             </summary>
         </member>
-        <member name="P:AIGame.Core.GameManager.VisionConesToggle">
-            <summary>Toggle controlling AI vision cone visibility.</summary>
-        </member>
-        <member name="P:AIGame.Core.GameManager.ImmortalToggle">
-            <summary>Toggle that prevents player death.</summary>
-        </member>
         <member name="P:AIGame.Core.GameManager.GameStarted">
             <summary>True once match has started.</summary>
         </member>
@@ -1682,6 +2445,11 @@
         </member>
         <member name="P:AIGame.Core.GameManager.AgentsPerTeam">
             <summary>Requested agents per team (from UI).</summary>
+        </member>
+        <member name="E:AIGame.Core.GameManager.SuddenDeathActivated">
+            <summary>
+            Event fired when sudden death mode is activated
+            </summary>
         </member>
         <member name="F:AIGame.Core.GameManager.minDeathForce">
             <summary>Minimum impulse applied on death.</summary>
@@ -1746,25 +2514,20 @@
             Switches back to free‑fly camera and toggles menu.
             </summary>
         </member>
-        <member name="M:AIGame.Core.GameManager.GetAgentsPerTeam">
+        <member name="M:AIGame.Core.GameManager.DestroyPlayers">
             <summary>
-            Parses the agents‑per‑team UI field.
-            </summary>
-            <returns>Parsed count; defaults to 1 on invalid input.</returns>
-        </member>
-        <member name="M:AIGame.Core.GameManager.ToggleVisionCones">
-            <summary>
-            Applies the vision‑cone toggle to all registered AIs.
+            Destroys any active player instances.
             </summary>
         </member>
         <member name="M:AIGame.Core.GameManager.ToggleMenu">
             <summary>
             Toggles the in‑game menu and cursor lock/visibility.
+            Delegates to UIManager for UI handling.
             </summary>
         </member>
         <member name="M:AIGame.Core.GameManager.RespawnAgent(AIGame.Core.Agent)">
             <summary>
-            Public entry point to respawn an agent after a delay.
+            Internal entry point to respawn an agent after a delay.
             </summary>
             <param name="agent">The agent to respawn.</param>
         </member>
@@ -1786,6 +2549,46 @@
             <param name="blueTeamAgents">Agents to place for Blue team.</param>
             <param name="redTeamAgents">Agents to place for Red team.</param>
         </member>
+        <member name="M:AIGame.Core.GameManager.RegisterKnockout(AIGame.Core.Team)">
+            <summary>
+            Called when an agent is knocked out to track team knockouts
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.GameManager.RegisterFlagCapture(AIGame.Core.Team)">
+            <summary>
+            Called when a team captures a flag
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.GameManager.CheckTimeBasedVictory">
+            <summary>
+            Checks victory conditions when time limit is reached
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.GameManager.EnterSuddenDeath">
+            <summary>
+            Enters sudden death mode where next knockout wins
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.GameManager.GetRemainingTime">
+            <summary>
+            Gets remaining time in seconds
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.GameManager.GetMatchTime">
+            <summary>
+            Gets current match timer
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.GameManager.IsSuddenDeath">
+            <summary>
+            Returns true if in sudden death mode
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.GameManager.LoadAndApplyGameSettings">
+            <summary>
+            Load and apply all game settings from PlayerPrefs
+            </summary>
+        </member>
         <member name="T:AIGame.Core.ICaptureable">
             <summary>
             Defines the interface for an object that can be captured in the game.
@@ -1798,6 +2601,65 @@
             <param name="detectable">
             The <see cref="T:AIGame.Core.Detectable"/> component of the agent that died.
             </param>
+        </member>
+        <member name="T:AIGame.Core.MushroomBuff">
+            <summary>
+            A power-up buff that doubles an agent's movement speed for a limited time.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.MushroomBuff.OnApply(AIGame.Core.Agent)">
+            <summary>
+            Doubles the agent's movement speed when applied.
+            </summary>
+            <param name="agent">The agent to apply the buff to.</param>
+        </member>
+        <member name="M:AIGame.Core.MushroomBuff.OnRemove">
+            <summary>
+            Restores the agent's original movement speed when removed.
+            </summary>
+        </member>
+        <member name="T:AIGame.Core.MushroomDeBuff">
+            <summary>
+            A debuff that halves an agent's movement speed for a limited time.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.MushroomDeBuff.OnApply(AIGame.Core.Agent)">
+            <summary>
+            Halves the agent's movement speed when applied.
+            </summary>
+            <param name="agent">The agent to apply the debuff to.</param>
+        </member>
+        <member name="M:AIGame.Core.MushroomDeBuff.OnRemove">
+            <summary>
+            Restores the agent's original movement speed when removed.
+            </summary>
+        </member>
+        <member name="T:AIGame.Core.NotifyStandup">
+            <summary>
+            State machine behavior that tracks when an agent has just stood up from a ragdoll state.
+            Provides a static flag that other components can check to determine when movement can resume.
+            </summary>
+        </member>
+        <member name="P:AIGame.Core.NotifyStandup.JustStoodUp">
+            <summary>
+            Indicates whether an agent has just transitioned to the standing state.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.NotifyStandup.OnStateEnter(UnityEngine.Animator,UnityEngine.AnimatorStateInfo,System.Int32)">
+            <summary>
+            Called when entering the standup state. Sets the JustStoodUp flag to true.
+            </summary>
+            <param name="animator">The animator this state belongs to.</param>
+            <param name="stateInfo">Information about the current state.</param>
+            <param name="layerIndex">The layer index of this state.</param>
+        </member>
+        <member name="M:AIGame.Core.NotifyStandup.OnStateExit(UnityEngine.Animator,UnityEngine.AnimatorStateInfo,System.Int32)">
+            <summary>
+            Called when exiting the standup state. Sets the JustStoodUp flag to false.
+            </summary>
+            <param name="animator">The animator this state belongs to.</param>
+            <param name="stateInfo">Information about the current state.</param>
+            <param name="layerIndex">The layer index of this state.</param>
         </member>
         <member name="T:AIGame.Core.Player">
             <summary>
@@ -1974,6 +2836,46 @@
             <param name="point">Test point.</param>
             <returns>Closest major rigidbody or null.</returns>
         </member>
+        <member name="T:AIGame.Core.PowerUp">
+            <summary>
+            Represents a collectable power-up that provides buffs to agents.
+            Each power-up has a unique ID and contains one or more possible buffs with varying proc chances.
+            </summary>
+        </member>
+        <member name="P:AIGame.Core.PowerUp.PowerUpID">
+            <summary>
+            Unique identifier for this power-up instance.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.PowerUp.Awake">
+            <summary>
+            Assigns a unique ID to this power-up and registers it with the GameManager.
+            </summary>
+        </member>
+        <member name="M:AIGame.Core.PowerUp.GetBuff">
+            <summary>
+            Randomly selects a buff from the available buffs based on their proc chances.
+            Uses weighted random selection.
+            </summary>
+            <returns>A randomly selected buff, or null if no valid buffs available.</returns>
+        </member>
+        <member name="T:AIGame.Core.BuffProc">
+            <summary>
+            Serializable data structure that pairs a buff with its probability of being selected.
+            Used for weighted random selection of buffs from power-ups.
+            </summary>
+        </member>
+        <member name="F:AIGame.Core.BuffProc.Buff">
+            <summary>
+            The buff that can be applied to an agent.
+            </summary>
+        </member>
+        <member name="F:AIGame.Core.BuffProc.ProcChance">
+            <summary>
+            The probability weight for this buff to be selected (0.0 to 1.0).
+            Higher values increase the chance of selection.
+            </summary>
+        </member>
         <member name="T:AIGame.Core.Ragdoll">
             <summary>
             Controls the enabling and disabling of ragdoll physics for a character.
@@ -2014,644 +2916,400 @@
             and enabling the main collider.
             </summary>
         </member>
-        <member name="T:AIGame.Examples.ExampleAIState">
+        <member name="T:AIGame.Core.StunStars">
             <summary>
-            Base class for AI states in a simple finite state machine.
-            Supports optional nested substates that are entered/executed/exited together.
+            Creates animated "stun stars" effect that follows a target (typically a character's head)
+            with spinning and bobbing motion to indicate a stunned state.
             </summary>
         </member>
-        <member name="F:AIGame.Examples.ExampleAIState.parent">
+        <member name="F:AIGame.Core.StunStars.localOffset">
             <summary>
-            The owning AI instance.
+            Local position offset from the follow target.
             </summary>
         </member>
-        <member name="P:AIGame.Examples.ExampleAIState.Name">
+        <member name="F:AIGame.Core.StunStars.spinSpeed">
             <summary>
-            Display name for debugging.
+            Rotation speed in degrees per second.
             </summary>
         </member>
-        <member name="F:AIGame.Examples.ExampleAIState.subStates">
+        <member name="F:AIGame.Core.StunStars.bobAmplitude">
             <summary>
-            Optional nested substates that run with this state.
+            Amplitude of the bobbing motion.
             </summary>
         </member>
-        <member name="M:AIGame.Examples.ExampleAIState.#ctor(AIGame.Examples.ExampleAI,System.String,AIGame.Examples.ExampleAIState[])">
+        <member name="F:AIGame.Core.StunStars.bobFrequency">
             <summary>
-            Creates a new state.
+            Frequency of the bobbing motion in cycles per second.
             </summary>
-            <param name="parent">Owning AI.</param>
-            <param name="name">Debug name.</param>
-            <param name="substates">Optional substates.</param>
         </member>
-        <member name="M:AIGame.Examples.ExampleAIState.Enter">
+        <member name="M:AIGame.Core.StunStars.Awake">
             <summary>
-            Called when entering this state.
-            Invokes <see cref="M:AIGame.Examples.ExampleAIState.Enter"/> on all substates.
+            Unity Awake method. Initializes the pivot and base position.
             </summary>
         </member>
-        <member name="M:AIGame.Examples.ExampleAIState.Exit">
+        <member name="M:AIGame.Core.StunStars.Update">
             <summary>
-            Called when exiting this state.
-            Invokes <see cref="M:AIGame.Examples.ExampleAIState.Exit"/> on all substates.
+            Unity Update method. Updates position to follow target and applies spinning and bobbing animations.
             </summary>
         </member>
-        <member name="M:AIGame.Examples.ExampleAIState.Execute">
+        <member name="T:CharacterFrame">
             <summary>
-            Called every update while this state is active.
-            Invokes <see cref="M:AIGame.Examples.ExampleAIState.Execute"/> on all substates.
+            UI component that displays information about an AI agent, including health status,
+            buffs, flag possession, and other visual indicators.
             </summary>
         </member>
-        <member name="T:AIGame.Examples.Idle">
+        <member name="M:CharacterFrame.Setup(AIGame.Core.BaseAI,AIGame.Core.FlagCarrier)">
             <summary>
-            A no-op idle state.
+            Initializes the character frame with AI and flag carrier references,
+            and subscribes to relevant events.
             </summary>
+            <param name="ai">The AI agent to track.</param>
+            <param name="flagCarrier">The flag carrier component of the agent.</param>
         </member>
-        <member name="M:AIGame.Examples.Idle.#ctor(AIGame.Examples.ExampleAI)">
+        <member name="M:CharacterFrame.Buffed(AIGame.Core.Buff)">
             <summary>
-            Creates an idle state.
+            Handles when a buff is applied to the agent, updating the visual state.
             </summary>
-            <param name="parent">Owning AI.</param>
+            <param name="buff">The buff that was applied.</param>
         </member>
-        <member name="T:AIGame.Examples.MoveToPosition">
+        <member name="M:CharacterFrame.BuffRemoved(AIGame.Core.Buff)">
             <summary>
-            Base state for moving to a world position, raising an event on arrival.
+            Handles when a buff is removed from the agent, updating the visual state.
             </summary>
+            <param name="buff">The buff that was removed.</param>
         </member>
-        <member name="E:AIGame.Examples.MoveToPosition.DestinationReached">
+        <member name="M:CharacterFrame.Die">
             <summary>
-            Raised exactly once when the destination is reached.
+            Handles when the agent dies, updating the frame to show death state.
             </summary>
         </member>
-        <member name="F:AIGame.Examples.MoveToPosition.currentDestination">
-            <summary>Current target world position.</summary>
-        </member>
-        <member name="F:AIGame.Examples.MoveToPosition.hasReachedDestination">
-            <summary>True after arrival is detected.</summary>
-        </member>
-        <member name="F:AIGame.Examples.MoveToPosition.ARRIVAL_THRESHOLD">
-            <summary>Distance threshold to consider arrival.</summary>
-        </member>
-        <member name="M:AIGame.Examples.MoveToPosition.#ctor(AIGame.Examples.ExampleAI,System.String,AIGame.Examples.ExampleAIState[])">
-            <summary>
-            Creates a move state.
-            </summary>
-            <param name="parent">Owning AI.</param>
-            <param name="name">Debug name.</param>
-            <param name="substates">Optional substates.</param>
-        </member>
-        <member name="M:AIGame.Examples.MoveToPosition.Enter">
-            <inheritdoc/>
-        </member>
-        <member name="M:AIGame.Examples.MoveToPosition.Execute">
-            <inheritdoc/>
-        </member>
-        <member name="T:AIGame.Examples.MoveToObjective">
-            <summary>
-            Moves near the current match objective.
-            </summary>
-        </member>
-        <member name="M:AIGame.Examples.MoveToObjective.#ctor(AIGame.Examples.ExampleAI,AIGame.Examples.ExampleAIState[])">
-            <summary>
-            Creates the state.
-            </summary>
-            <param name="parent">Owning AI.</param>
-            <param name="substates">Optional substates.</param>
-        </member>
-        <member name="M:AIGame.Examples.MoveToObjective.Enter">
-            <inheritdoc/>
-        </member>
-        <member name="T:AIGame.Examples.Combat">
-            <summary>
-            State for engaging visible enemies.
-            </summary>
-        </member>
-        <member name="E:AIGame.Examples.Combat.NoMoreEnemies">
-            <summary>
-            Raised when there are no visible enemies.
-            </summary>
-        </member>
-        <member name="M:AIGame.Examples.Combat.#ctor(AIGame.Examples.ExampleAI,AIGame.Examples.ExampleAIState[])">
-            <summary>
-            Creates the state.
-            </summary>
-            <param name="parent">Owning AI.</param>
-            <param name="substates">Optional substates.</param>
-        </member>
-        <member name="M:AIGame.Examples.Combat.Enter">
-            <inheritdoc/>
-        </member>
-        <member name="M:AIGame.Examples.Combat.Execute">
-            <inheritdoc/>
-        </member>
-        <member name="M:AIGame.Examples.Combat.Exit">
-            <inheritdoc/>
-        </member>
-        <member name="T:AIGame.Examples.ProtectObjective">
-            <summary>
-            Patrols around the objective by moving to random nearby offsets.
-            </summary>
-        </member>
-        <member name="F:AIGame.Examples.ProtectObjective.currentDestination">
-            <summary>Current patrol destination.</summary>
-        </member>
-        <member name="F:AIGame.Examples.ProtectObjective.ARRIVAL_THRESHOLD">
-            <summary>Arrival threshold for patrol hops.</summary>
-        </member>
-        <member name="F:AIGame.Examples.ProtectObjective.hasDestination">
-            <summary>Whether a destination has been set.</summary>
-        </member>
-        <member name="M:AIGame.Examples.ProtectObjective.#ctor(AIGame.Examples.ExampleAI,AIGame.Examples.ExampleAIState[])">
-            <summary>
-            Creates the state.
-            </summary>
-            <param name="parent">Owning AI.</param>
-            <param name="substates">Optional substates.</param>
-        </member>
-        <member name="M:AIGame.Examples.ProtectObjective.Execute">
-            <inheritdoc/>
-        </member>
-        <member name="M:AIGame.Examples.ProtectObjective.Exit">
-            <inheritdoc/>
-        </member>
-        <member name="T:AIGame.Examples.Strafe">
-            <summary>
-            Strafes left/right around current position.
-            </summary>
-        </member>
-        <member name="F:AIGame.Examples.Strafe.movingRight">
-            <summary>Current strafe direction flag.</summary>
-        </member>
-        <member name="M:AIGame.Examples.Strafe.#ctor(AIGame.Examples.ExampleAI)">
-            <summary>
-            Creates the state.
-            </summary>
-            <param name="parent">Owning AI.</param>
-        </member>
-        <member name="M:AIGame.Examples.Strafe.Execute">
-            <inheritdoc/>
-        </member>
-        <member name="T:AIGame.Examples.Dodge">
-            <summary>
-            Performs a dodge when a hostile ball is detected nearby.
-            </summary>
-        </member>
-        <member name="F:AIGame.Examples.Dodge.ball">
-            <summary>Last detected hostile ball.</summary>
-        </member>
-        <member name="M:AIGame.Examples.Dodge.#ctor(AIGame.Examples.ExampleAI)">
+        <member name="M:CharacterFrame.Respawn">
             <summary>
-            Creates the state.
+            Handles when the agent respawns, restoring the normal visual state.
             </summary>
-            <param name="parent">Owning AI.</param>
-        </member>
-        <member name="M:AIGame.Examples.Dodge.Execute">
-            <inheritdoc/>
         </member>
-        <member name="M:AIGame.Examples.Dodge.OnBallDetected(AIGame.Core.Ball)">
+        <member name="M:CharacterFrame.PickupFlag">
             <summary>
-            AI hook for ball sightings.
+            Handles when the agent picks up a flag, updating the portrait.
             </summary>
-            <param name="ball">Detected ball.</param>
         </member>
-        <member name="T:AIGame.Examples.FollowEnemy">
+        <member name="M:CharacterFrame.DropFlag">
             <summary>
-            Follows a visible enemy and stops at preferred engagement range.
+            Handles when the agent drops a flag, restoring normal portrait.
             </summary>
         </member>
-        <member name="F:AIGame.Examples.FollowEnemy.stopped">
-            <summary>Whether the agent has issued a stop after entering range.</summary>
-        </member>
-        <member name="M:AIGame.Examples.FollowEnemy.#ctor(AIGame.Examples.ExampleAI,AIGame.Examples.ExampleAIState[])">
+        <member name="M:CharacterFrame.Select">
             <summary>
-            Creates the state.
+            Handles when this agent is selected for spectating, scaling up the frame.
             </summary>
-            <param name="parent">Owning AI.</param>
-            <param name="substates">Optional substates.</param>
-        </member>
-        <member name="M:AIGame.Examples.FollowEnemy.Enter">
-            <inheritdoc/>
-        </member>
-        <member name="M:AIGame.Examples.FollowEnemy.Execute">
-            <inheritdoc/>
         </member>
-        <member name="T:AIGame.Examples.MoveToEnemyZone">
+        <member name="M:CharacterFrame.DeSelect">
             <summary>
-            Moves toward the opposing team's flag zone.
+            Handles when this agent is deselected from spectating, restoring normal scale.
             </summary>
         </member>
-        <member name="M:AIGame.Examples.MoveToEnemyZone.#ctor(AIGame.Examples.ExampleAI,AIGame.Examples.ExampleAIState[])">
+        <member name="T:SpectatorManager">
             <summary>
-            Creates the state.
+            Manages spectator camera functionality, allowing players to cycle through AI agents
+            and switch between follow camera and free-fly camera modes.
             </summary>
-            <param name="parent">Owning AI.</param>
-            <param name="substates">Optional substates.</param>
         </member>
-        <member name="M:AIGame.Examples.MoveToEnemyZone.Enter">
-            <inheritdoc/>
-        </member>
-        <member name="T:AIGame.Examples.MoveToFriendlyZone">
+        <member name="P:SpectatorManager.Instance">
             <summary>
-            Moves toward the friendly team's flag zone.
+            Scene singleton accessor. Creates a hidden instance if none exists.
             </summary>
         </member>
-        <member name="M:AIGame.Examples.MoveToFriendlyZone.#ctor(AIGame.Examples.ExampleAI,AIGame.Examples.ExampleAIState[])">
+        <member name="P:SpectatorManager.FollowCam">
             <summary>
-            Creates the state.
+            Reference to the follow camera component.
             </summary>
-            <param name="parent">Owning AI.</param>
-            <param name="substates">Optional substates.</param>
-        </member>
-        <member name="M:AIGame.Examples.MoveToFriendlyZone.Enter">
-            <inheritdoc/>
         </member>
-        <member name="T:AIGame.Examples.FollowFriendlyFlag">
+        <member name="P:SpectatorManager.FreeFlyCam">
             <summary>
-            Follows the friendly flag's current position.
+            Reference to the free-fly camera component.
             </summary>
         </member>
-        <member name="F:AIGame.Examples.FollowFriendlyFlag.flag">
-            <summary>Cached friendly flag.</summary>
-        </member>
-        <member name="M:AIGame.Examples.FollowFriendlyFlag.#ctor(AIGame.Examples.ExampleAI,AIGame.Examples.ExampleAIState[])">
+        <member name="P:SpectatorManager.Spectating">
             <summary>
-            Creates the state.
+            Whether the manager is currently in spectating mode.
             </summary>
-            <param name="parent">Owning AI.</param>
-            <param name="substates">Optional substates.</param>
-        </member>
-        <member name="M:AIGame.Examples.FollowFriendlyFlag.Enter">
-            <inheritdoc/>
-        </member>
-        <member name="M:AIGame.Examples.FollowFriendlyFlag.Execute">
-            <inheritdoc/>
         </member>
-        <member name="T:AIGame.Examples.MoveToEnemyFlag">
+        <member name="M:SpectatorManager.Update">
             <summary>
-            Moves to the current position of the enemy flag.
+            Handles input for spectator camera controls.
+            C - Enable free fly, Z - Enable follow, Q - Next agent, E - Previous agent
             </summary>
         </member>
-        <member name="M:AIGame.Examples.MoveToEnemyFlag.#ctor(AIGame.Examples.ExampleAI,AIGame.Examples.ExampleAIState[])">
+        <member name="M:SpectatorManager.EnableFollow">
             <summary>
-            Creates the state.
+            Enables follow camera mode and switches to tracking the next agent.
             </summary>
-            <param name="parent">Owning AI.</param>
-            <param name="substates">Optional substates.</param>
         </member>
-        <member name="M:AIGame.Examples.MoveToEnemyFlag.Enter">
-            <inheritdoc/>
-        </member>
-        <member name="T:AIGame.Examples.ChaseEnemyCarrier">
+        <member name="M:SpectatorManager.EnableFreeFly">
             <summary>
-            Chases the current enemy flag carrier if visible; attacks when in range.
+            Enables free-fly camera mode and shows the name canvas.
+            Destroys any active player instances.
             </summary>
-        </member>
-        <member name="F:AIGame.Examples.ChaseEnemyCarrier.enemyCarrierId">
-            <summary>Stable ID of the enemy carrier to chase; -1 if none.</summary>
-        </member>
-        <member name="F:AIGame.Examples.ChaseEnemyCarrier.enemyCarrier">
-            <summary>Per-frame snapshot of the target carrier.</summary>
-        </member>
-        <member name="F:AIGame.Examples.ChaseEnemyCarrier.myFlag">
-            <summary>Reference to own team's flag.</summary>
-        </member>
-        <member name="F:AIGame.Examples.ChaseEnemyCarrier.enemyFlag">
-            <summary>Reference to enemy team's flag.</summary>
         </member>
-        <member name="M:AIGame.Examples.ChaseEnemyCarrier.#ctor(AIGame.Examples.ExampleAI,AIGame.Examples.ExampleAIState[])">
+        <member name="M:SpectatorManager.ClearAgentSelection">
             <summary>
-            Creates the state and resolves team flags.
+            Clear the current spectated agent selection
             </summary>
-            <param name="parent">Owning AI.</param>
-            <param name="substates">Optional substates.</param>
         </member>
-        <member name="M:AIGame.Examples.ChaseEnemyCarrier.Enter">
-            <inheritdoc/>
-        </member>
-        <member name="M:AIGame.Examples.ChaseEnemyCarrier.Execute">
-            <inheritdoc/>
-        </member>
-        <member name="M:AIGame.Examples.ChaseEnemyCarrier.RefreshEnemyCarrierSnapshot">
+        <member name="M:SpectatorManager.NextAgent">
             <summary>
-            Updates the cached snapshot of the enemy carrier if visible this frame.
+            Cycles to the next agent in the spectator list.
             </summary>
         </member>
-        <member name="T:AIGame.Examples.EasyAI">
+        <member name="M:SpectatorManager.PreviousAgent">
             <summary>
-            AI class for an easy agent that simply runs toward the objective.
+            Cycles to the previous agent in the spectator list.
             </summary>
         </member>
-        <member name="M:AIGame.Examples.EasyAI.StartAI">
+        <member name="T:UIManager">
             <summary>
-            Called when the AI is initialized.
-            Responsible for creating states, setting up listeners, and defining transitions.
+            Manages all user interface elements and interactions for the AI game.
+            Handles menus, settings, game UI, and camera controls through a singleton pattern.
             </summary>
         </member>
-        <member name="M:AIGame.Examples.EasyAI.ConfigureStats">
+        <member name="P:UIManager.Instance">
             <summary>
-            Configures the base stats for this AI instance.
+            Scene singleton accessor. Creates a hidden instance if none exists.
             </summary>
         </member>
-        <member name="M:AIGame.Examples.EasyAI.OnObjectiveReached">
+        <member name="T:UIManager.CameraMode">
             <summary>
-            Called when the AI reaches the objective.
-            Switches state to <see cref="T:AIGame.Examples.Idle"/>.
+            Defines the different camera control modes available in the game.
+            Each mode affects how agent names are displayed and camera behavior.
             </summary>
         </member>
-        <member name="M:AIGame.Examples.EasyAI.OnRespawned">
-            <summary>
-            Called when the AI respawns.
-            Switches state to <see cref="T:AIGame.Examples.MoveToObjective"/>.
-            </summary>
+        <member name="F:UIManager.CameraMode.FreeFly">
+            <summary>Free-flying camera mode that shows names based on user setting.</summary>
         </member>
-        <member name="T:AIGame.Examples.EasyFactory">
-            <summary>
-            Factory that spawns EasyAI agents.
-            Creates a full team of agents using the EasyAI behaviour.
-            </summary>
+        <member name="F:UIManager.CameraMode.FollowAI">
+            <summary>AI-following camera mode that always hides names regardless of setting.</summary>
         </member>
-        <member name="M:AIGame.Examples.EasyFactory.CreateAgents(UnityEngine.GameObject)">
-            <summary>
-            Creates a set of EasyAI agents for one team.
-            </summary>
-            <param name="agentPrefab">The prefab used for each agent.</param>
-            <returns>An array containing the spawned EasyAI agents.</returns>
+        <member name="F:UIManager.CameraMode.Player">
+            <summary>Player camera mode that shows names based on user setting.</summary>
         </member>
-        <member name="T:AIGame.Examples.ExampleAI">
+        <member name="M:UIManager.Start">
             <summary>
-            Base class for example AI agents.
-            Provides a finite state machine implementation for switching between states
-            based on <see cref="T:AIGame.Examples.ExampleAI.AICondition"/> values.
+            Initialize UI settings on start
             </summary>
         </member>
-        <member name="T:AIGame.Examples.ExampleAI.AICondition">
+        <member name="M:UIManager.Update">
             <summary>
-            Represents the possible conditions that can trigger a state change.
+            Update timer and game state UI every frame
             </summary>
         </member>
-        <member name="F:AIGame.Examples.ExampleAI.currentState">
+        <member name="M:UIManager.ToggleVisionCones">
             <summary>
-            The current active state.
+            Applies the vision‑cone toggle to all registered AIs.
             </summary>
         </member>
-        <member name="F:AIGame.Examples.ExampleAI.transitions">
+        <member name="M:UIManager.ToggleNames">
             <summary>
-            Maps a tuple of (current state, condition) to the next state.
+            Toggles the visibility of player name plates
             </summary>
         </member>
-        <member name="F:AIGame.Examples.ExampleAI.currentCondition">
+        <member name="M:UIManager.ApplyNamesVisibility">
             <summary>
-            The condition currently set, which may trigger a state change.
+            Apply names visibility based on current camera mode and user setting
             </summary>
         </member>
-        <member name="M:AIGame.Examples.ExampleAI.ExecuteAI">
+        <member name="M:UIManager.SetCameraMode(UIManager.CameraMode)">
             <summary>
-            Main update logic for the AI.
-            Runs once per frame as part of <see cref="T:AIGame.Core.BaseAI"/> execution.
+            Set camera mode and apply appropriate names visibility
             </summary>
         </member>
-        <member name="M:AIGame.Examples.ExampleAI.SetCondition(AIGame.Examples.ExampleAI.AICondition)">
+        <member name="M:UIManager.SetFreeFlyMode">
             <summary>
-            Sets the current condition to be evaluated in the next update cycle.
+            Set to free fly camera mode - show names based on user setting
             </summary>
-            <param name="condition">The new condition value.</param>
         </member>
-        <member name="M:AIGame.Examples.ExampleAI.AddTransition(AIGame.Examples.ExampleAIState,AIGame.Examples.ExampleAI.AICondition,AIGame.Examples.ExampleAIState)">
+        <member name="M:UIManager.SetFollowAIMode">
             <summary>
-            Adds a state transition rule.
+            Set to follow AI camera mode - always hide names
             </summary>
-            <param name="from">The starting state.</param>
-            <param name="condition">The condition that triggers the change.</param>
-            <param name="to">The target state.</param>
         </member>
-        <member name="M:AIGame.Examples.ExampleAI.ProcessTransitions">
+        <member name="M:UIManager.SetPlayerMode">
             <summary>
-            Checks if the current state and condition match any registered transition rule.
-            Changes the state if a match is found.
+            Set to player camera mode - show names based on user setting
             </summary>
         </member>
-        <member name="M:AIGame.Examples.ExampleAI.ChangeState(AIGame.Examples.ExampleAIState)">
+        <member name="M:UIManager.ToggleCrosshair">
             <summary>
-            Changes the current state, calling <see cref="M:AIGame.Examples.ExampleAIState.Exit"/> on the old state
-            and <see cref="M:AIGame.Examples.ExampleAIState.Enter"/> on the new state.
+            Toggles the visibility of the crosshair
             </summary>
-            <param name="newState">The state to switch to.</param>
         </member>
-        <member name="T:AIGame.Examples.FlagCarrierAI">
+        <member name="M:UIManager.ToggleImmortality">
             <summary>
-            AI that plays capture-the-flag.
-            Will try to capture the enemy flag and return the friendly flag if it is taken.
-            Uses a utility-based decision-making system.
+            Toggles immortality mode for players
             </summary>
         </member>
-        <member name="F:AIGame.Examples.FlagCarrierAI.myFlag">
+        <member name="M:UIManager.ShowInGameMenu">
             <summary>
-            Reference to this agent's own team flag.
+            Show the in-game menu
             </summary>
         </member>
-        <member name="F:AIGame.Examples.FlagCarrierAI.enemyFlag">
+        <member name="M:UIManager.ToggleMenu">
             <summary>
-            Reference to the opposing team's flag.
+            Toggles the in‑game menu and cursor lock/visibility.
             </summary>
         </member>
-        <member name="F:AIGame.Examples.FlagCarrierAI.utilities">
+        <member name="M:UIManager.LoadUISettings">
             <summary>
-            Dictionary of utility function names mapped to their scoring functions.
-            Each function returns a score representing how desirable that action is.
+            Load all UI settings from PlayerPrefs
             </summary>
         </member>
-        <member name="F:AIGame.Examples.FlagCarrierAI.actions">
+        <member name="M:UIManager.ApplyVisionSettings">
             <summary>
-            Dictionary of action names mapped to the actual actions (state changes) to perform.
+            Apply vision settings to all agents after they are spawned
             </summary>
         </member>
-        <member name="F:AIGame.Examples.FlagCarrierAI.friendlyFlagIsDropped">
+        <member name="P:UIManager.IsMenuOpen">
             <summary>
-            True if the friendly flag has been dropped in the field.
+            Public property to check if menu is open
             </summary>
         </member>
-        <member name="F:AIGame.Examples.FlagCarrierAI.flagsSpawned">
+        <member name="M:UIManager.GetNameCanvasTransform">
             <summary>
-            True if both flags have been spawned into the game.
+            Get the name canvas transform for spawning name plates
             </summary>
         </member>
-        <member name="F:AIGame.Examples.FlagCarrierAI.idle">
+        <member name="M:UIManager.HideAllMenuCanvases">
             <summary>
-            Cached reference to the idle state.
+            Hide all menu canvases only (for switching between menus)
             </summary>
         </member>
-        <member name="F:AIGame.Examples.FlagCarrierAI.lastAction">
+        <member name="M:UIManager.HideAllMenus">
             <summary>
-            The name of the last action performed.
-            Used to prevent re-entering the same state unnecessarily.
+            Hide all menu canvases and exit to gameplay
             </summary>
-        </member>
-        <member name="M:AIGame.Examples.FlagCarrierAI.ConfigureStats">
-            <inheritdoc/>
-        </member>
-        <member name="M:AIGame.Examples.FlagCarrierAI.StartAI">
-            <inheritdoc/>
         </member>
-        <member name="M:AIGame.Examples.FlagCarrierAI.OnFlagSpawned">
+        <member name="M:UIManager.ShowStartMenu">
             <summary>
-            Event handler called when both flags are spawned into the scene.
+            Show the start menu
             </summary>
         </member>
-        <member name="M:AIGame.Examples.FlagCarrierAI.ExecuteAI">
-            <inheritdoc/>
-        </member>
-        <member name="M:AIGame.Examples.FlagCarrierAI.CalculateEnemyFlagUtility">
+        <member name="M:UIManager.ShowSettingsMenu">
             <summary>
-            Calculates the utility of moving to capture the enemy flag.
+            Show the settings menu
             </summary>
         </member>
-        <member name="M:AIGame.Examples.FlagCarrierAI.CalculateChaseEnemyFlagCarrier">
+        <member name="M:UIManager.HideSettingsMenu">
             <summary>
-            Calculates the utility of chasing the enemy flag carrier.
+            Hide settings menu, save all settings, and return to start menu
             </summary>
         </member>
-        <member name="M:AIGame.Examples.FlagCarrierAI.CalculateFriendlyZoneUtility">
+        <member name="M:UIManager.SetGameUIActive(System.Boolean)">
             <summary>
-            Calculates the utility of returning to the friendly flag zone.
+            Show/hide the game UI
             </summary>
         </member>
-        <member name="M:AIGame.Examples.FlagCarrierAI.CalculateFriendlyFlagUtility">
+        <member name="M:UIManager.ShowMatchUI">
             <summary>
-            Calculates the utility of moving to retrieve the friendly flag.
+            Show match timer and stat UI elements
             </summary>
         </member>
-        <member name="M:AIGame.Examples.FlagCarrierAI.CalculateIdle">
+        <member name="M:UIManager.SetWinCanvasActive(System.Boolean)">
             <summary>
-            Calculates the utility of idling.
+            Show/hide the win canvas
             </summary>
         </member>
-        <member name="T:AIGame.Examples.FlagCarrierFactory">
+        <member name="M:UIManager.ShowWinScreen(AIGame.Core.Team,System.String)">
             <summary>
-            Factory that spawns FlagCarrierAI agents.
-            Creates a full team of agents that attempt to capture the enemy flag
-            and return the friendly flag.
+            Show win screen for specified team
             </summary>
         </member>
-        <member name="M:AIGame.Examples.FlagCarrierFactory.CreateAgents(UnityEngine.GameObject)">
+        <member name="M:UIManager.GetTeamSelections">
             <summary>
-            Creates a set of FlagCarrierAI agents for one team.
+            Get team dropdown values
             </summary>
-            <param name="agentPrefab">The prefab used for each agent.</param>
-            <returns>An array containing the spawned FlagCarrierAI agents.</returns>
         </member>
-        <member name="T:AIGame.Examples.HardAI">
+        <member name="M:UIManager.GetAgentsPerTeam">
             <summary>
-            A "Hard" difficulty AI that:
-            - Moves toward objectives
-            - Engages in combat with enemies
-            - Strafes and dodges incoming projectiles
-            - Protects objectives when reached
-            Uses a finite state machine with transitions triggered by in-game events.
+            Get agents per team from input field
             </summary>
         </member>
-        <member name="F:AIGame.Examples.HardAI.idle">
+        <member name="M:UIManager.SetupDropdownOptions(System.Collections.Generic.List{System.String})">
             <summary>
-            Cached reference to the idle state for quick resetting after death.
+            Setup dropdown options
             </summary>
-        </member>
-        <member name="M:AIGame.Examples.HardAI.StartAI">
-            <inheritdoc/>
         </member>
-        <member name="M:AIGame.Examples.HardAI.ConfigureStats">
-            <inheritdoc/>
-        </member>
-        <member name="M:AIGame.Examples.HardAI.Ondeath">
+        <member name="M:UIManager.CreateAgentUI(AIGame.Core.BaseAI,AIGame.Core.Team)">
             <summary>
-            Called when the AI dies. Resets to idle state.
+            Create character frame and name plate for an agent
             </summary>
         </member>
-        <member name="M:AIGame.Examples.HardAI.OnObjectiveReached">
+        <member name="M:UIManager.LoadGameSettings">
             <summary>
-            Called when the objective is reached.
-            Switches to the protect-objective state.
+            Load game settings from PlayerPrefs and populate input fields
             </summary>
         </member>
-        <member name="M:AIGame.Examples.HardAI.OnEnemyEnterVision">
+        <member name="M:UIManager.SaveAllSettings">
             <summary>
-            Called when an enemy enters the AI's vision range.
-            Switches to combat state.
+            Save all game settings from input fields to PlayerPrefs
             </summary>
         </member>
-        <member name="M:AIGame.Examples.HardAI.OnNomoreEnemies">
+        <member name="M:UIManager.ApplyGameSettings">
             <summary>
-            Called when there are no more visible enemies.
-            Switches to move-to-objective state.
+            Apply current settings to the ControlPoint system
             </summary>
         </member>
-        <member name="M:AIGame.Examples.HardAI.OnSpawned">
+        <member name="M:UIManager.ShowKeybindsMenu">
             <summary>
-            Called when the AI respawns.
-            Switches to spawned state.
+            Show the keybinds menu
             </summary>
         </member>
-        <member name="T:AIGame.Examples.TestFactory">
+        <member name="M:UIManager.UpdateMatchTimer">
             <summary>
-            Factory that spawns HardAI agents.
-            Creates a full team of agents that run to objectives,
-            engage enemies, and dodge incoming projectiles.
+            Updates the match timer display
             </summary>
         </member>
-        <member name="M:AIGame.Examples.TestFactory.CreateAgents(UnityEngine.GameObject)">
+        <member name="M:UIManager.UpdateKnockoutCounts">
             <summary>
-            Creates a set of HardAI agents for one team.
+            Updates the knockout count displays
             </summary>
-            <param name="agentPrefab">The prefab used for each agent.</param>
-            <returns>An array containing the spawned HardAI agents.</returns>
         </member>
-        <member name="T:AIGame.Examples.MediumAI">
+        <member name="M:UIManager.UpdateFlagCaptureCounts">
             <summary>
-            A "Medium" difficulty AI that:
-            - Moves toward objectives
-            - Engages in combat with enemies
-            Uses a finite state machine with transitions based on in-game events.
+            Updates the flag capture count displays
             </summary>
-        </member>
-        <member name="M:AIGame.Examples.MediumAI.StartAI">
-            <inheritdoc/>
-        </member>
-        <member name="M:AIGame.Examples.MediumAI.ConfigureStats">
-            <inheritdoc/>
         </member>
-        <member name="M:AIGame.Examples.MediumAI.OnObjectiveReached">
+        <member name="M:UIManager.UpdateSuddenDeathIndicator">
             <summary>
-            Called when the objective is reached.
-            Switches to the idle state.
+            Shows/hides sudden death indicator
             </summary>
         </member>
-        <member name="M:AIGame.Examples.MediumAI.OnNomoreEnemies">
+        <member name="T:WorldToScreenFollower">
             <summary>
-            Called when there are no more visible enemies.
-            Switches to the move-to-objective state.
+            Positions a UI element to follow a world target, converting 3D world positions to screen space.
+            Handles name tags and other UI elements that need to track game objects.
             </summary>
         </member>
-        <member name="M:AIGame.Examples.MediumAI.OnEnemyEnterVision">
+        <member name="M:WorldToScreenFollower.Awake">
             <summary>
-            Called when an enemy enters the AI's vision range.
-            Switches to the combat state.
+            Unity Awake method. Initializes UI components and camera references.
             </summary>
         </member>
-        <member name="M:AIGame.Examples.MediumAI.OnRespawned">
+        <member name="M:WorldToScreenFollower.LateUpdate">
             <summary>
-            Called when the AI respawns.
-            Switches to the move-to-objective state.
+            Unity LateUpdate method. Updates the UI element position to follow the world target.
             </summary>
         </member>
-        <member name="T:AIGame.Examples.OpponentFactory">
+        <member name="M:WorldToScreenFollower.SetName(System.String,AIGame.Core.Team)">
             <summary>
-            Factory that spawns MediumAI agents.
-            MediumAI agents run to objectives and engage enemies they encounter.
+            Sets the name text and color based on the team.
             </summary>
+            <param name="name">The name to display.</param>
+            <param name="team">The team to determine text color.</param>
         </member>
-        <member name="M:AIGame.Examples.OpponentFactory.CreateAgents(UnityEngine.GameObject)">
+        <member name="M:WorldToScreenFollower.SetVisible(System.Boolean)">
             <summary>
-            Creates a set of MediumAI agents for one team.
+            Sets the visibility of the UI element.
             </summary>
-            <param name="agentPrefab">The prefab used for each agent.</param>
-            <returns>An array containing the spawned MediumAI agents.</returns>
+            <param name="v">True to show, false to hide.</param>
         </member>
     </members>
 </doc>
