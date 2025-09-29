@@ -1070,6 +1070,14 @@
             <param name="target">Perceived target snapshot (must be from current frame).</param>
             <returns>True if a throw started; otherwise false.</returns>
         </member>
+        <member name="M:AIGame.Core.BaseAI.ThrowBallInDirection(UnityEngine.Vector3)">
+            <summary>
+            Throws a ball in the specified direction at maximum projectile range.
+            Useful for area denial, suppression, or throwing toward suspected enemy positions.
+            </summary>
+            <param name="direction">Direction to throw (will be normalized). Use Vector3.forward, Vector3.right, etc., or custom directions.</param>
+            <returns>True if a throw started; otherwise false.</returns>
+        </member>
         <member name="M:AIGame.Core.BaseAI.OnCollisionEnter(UnityEngine.Collision)">
             <summary>
             Unity collision: applies ragdoll impulse on lethal ball hit and triggers death.
