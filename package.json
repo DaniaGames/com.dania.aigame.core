@@ -1,7 +1,7 @@
 {
   "name": "com.dania.aigame.core",
   "displayName": "AI Game Core",
-  "version": "1.0.28",
+  "version": "1.0.29",
   "unity": "2021.3",
   "description": "Core DLL for the AI Game project.",
   "author": {
